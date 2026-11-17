@@ -59,3 +59,12 @@ jobs:
         shell: pwsh
         run: |
           Get-ChildItem -Recurse -Filter sqlite3.exe
+
+      - name: Upload SQLCipher executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: sqlcipher-windows-x64
+          path: |
+            sqlite3.exe
+            C:\OpenSSL\bin\libcrypto-*.dll
+          if-no-files-found: error          
