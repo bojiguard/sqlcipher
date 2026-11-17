@@ -33,6 +33,7 @@ jobs:
           New-Item -ItemType Directory -Force C:\OpenSSL | Out-Null
           Copy-Item "$source\include" C:\OpenSSL -Recurse -Force
           Copy-Item "$source\lib" C:\OpenSSL -Recurse -Force
+          Copy-Item "$source\bin" C:\OpenSSL -Recurse -Force
 
           if (!(Test-Path "C:\OpenSSL\include\openssl\crypto.h")) {
             throw "OpenSSL header copy failed"
