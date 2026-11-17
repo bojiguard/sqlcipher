@@ -1,0 +1,42 @@
+name: Build SQLCipher Windows x64
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout SQLCipher
+        uses: actions/checkout@v4
+
+      - name: Install OpenSSL
+        shell: pwsh
+        run: |
+          choco install openssl --yes --no-progress
+          $openssl = "C:\Program Files\OpenSSL"
+          if (!(Test-Path $openssl)) {
+            $openssl = "C:\Program Files\OpenSSL-Win64"
+          }
+          echo "OPENSSL_ROOT=$openssl" >> $env:GITHUB_ENV
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Build SQLCipher
+        shell: cmd
+        run: |
+          nmake /f Makefile.msc sqlite3.exe ^
+            USE_AMALGAMATION=1 ^
+            NO_TCL=1 ^
+            OPT_FEATURE_FLAGS="-DSQLITE_HAS_CODEC=1 -DSQLITE_TEMP_STORE=2 -DSQLITE_EXTRA_INIT=sqlcipher_extra_init -DSQLITE_EXTRA_SHUTDOWN=sqlcipher_extra_shutdown -DSQLCIPHER_CRYPTO_OPENSSL=1" ^
+            TCCOPTS="/I%OPENSSL_ROOT%\include" ^
+            LTLINKOPTS="%OPENSSL_ROOT%\lib\VC\x64\MD\libcrypto.lib"
+
+      - name: Verify executable
+        shell: pwsh
+        run: |
+          Get-ChildItem -Recurse -Filter sqlite3.exe
