@@ -67,5 +67,5 @@ jobs:
           name: sqlcipher-windows-x64
           path: |
             sqlite3.exe
-            C:\OpenSSL\bin\libcrypto-*.dll
-          if-no-files-found: error          
+            C:/OpenSSL/bin/libcrypto-*.dll
+          if-no-files-found: error
