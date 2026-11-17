@@ -15,11 +15,30 @@ jobs:
         shell: pwsh
         run: |
           choco install openssl --yes --no-progress
-          $openssl = "C:\Program Files\OpenSSL"
-          if (!(Test-Path $openssl)) {
-            $openssl = "C:\Program Files\OpenSSL-Win64"
+
+          $candidates = @(
+            "C:\Program Files\OpenSSL",
+            "C:\Program Files\OpenSSL-Win64",
+            "C:\Program Files\OpenSSL-Win64\"
+          )
+
+          $source = $candidates | Where-Object {
+            Test-Path "$_\include\openssl\crypto.h"
+          } | Select-Object -First 1
+
+          if (!$source) {
+            throw "OpenSSL crypto.h not found"
           }
-          echo "OPENSSL_ROOT=$openssl" >> $env:GITHUB_ENV
+
+          New-Item -ItemType Directory -Force C:\OpenSSL | Out-Null
+          Copy-Item "$source\include" C:\OpenSSL -Recurse -Force
+          Copy-Item "$source\lib" C:\OpenSSL -Recurse -Force
+
+          if (!(Test-Path "C:\OpenSSL\include\openssl\crypto.h")) {
+            throw "OpenSSL header copy failed"
+          }
+
+          Write-Host "OpenSSL headers verified"
 
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
