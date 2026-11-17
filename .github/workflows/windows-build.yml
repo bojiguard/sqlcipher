@@ -61,11 +61,16 @@ jobs:
         run: |
           Get-ChildItem -Recurse -Filter sqlite3.exe
 
+      - name: Copy OpenSSL DLL
+        shell: pwsh
+        run: |
+          Copy-Item "C:\OpenSSL\bin\libcrypto-3-x64.dll" -Destination .
+
       - name: Upload SQLCipher executable
         uses: actions/upload-artifact@v4
         with:
           name: sqlcipher-windows-x64
           path: |
             sqlite3.exe
-            C:/OpenSSL/bin/libcrypto-*.dll
+            libcrypto-3-x64.dll
           if-no-files-found: error
