@@ -64,7 +64,7 @@ jobs:
       - name: Copy OpenSSL DLL
         shell: pwsh
         run: |
-          Copy-Item "C:\OpenSSL\bin\libcrypto-3-x64.dll" -Destination .
+          Copy-Item "C:\OpenSSL\bin\libcrypto-4-x64.dll" -Destination .
 
       - name: Upload SQLCipher executable
         uses: actions/upload-artifact@v4
@@ -72,5 +72,5 @@ jobs:
           name: sqlcipher-windows-x64
           path: |
             sqlite3.exe
-            libcrypto-3-x64.dll
+            libcrypto-4-x64.dll
           if-no-files-found: error
