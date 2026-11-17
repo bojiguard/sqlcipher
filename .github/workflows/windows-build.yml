@@ -33,8 +33,8 @@ jobs:
             USE_AMALGAMATION=1 ^
             NO_TCL=1 ^
             OPT_FEATURE_FLAGS="-DSQLITE_HAS_CODEC=1 -DSQLITE_TEMP_STORE=2 -DSQLITE_EXTRA_INIT=sqlcipher_extra_init -DSQLITE_EXTRA_SHUTDOWN=sqlcipher_extra_shutdown -DSQLCIPHER_CRYPTO_OPENSSL=1" ^
-            TCCOPTS="/I%OPENSSL_ROOT%\include" ^
-            LTLINKOPTS="%OPENSSL_ROOT%\lib\VC\x64\MD\libcrypto.lib"
+            TCCOPTS=/I\"%OPENSSL_ROOT%\include\"
+            LTLINKOPTS=\"%OPENSSL_ROOT%\lib\VC\x64\MD\libcrypto.lib\"
 
       - name: Verify executable
         shell: pwsh
